@@ -40,7 +40,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\Security\Acl\Model\DomainObjectInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\ValidatorInterface;
+use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 abstract class Admin implements AdminInterface, DomainObjectInterface
 {
@@ -387,7 +388,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     protected $securityHandler = null;
 
     /**
-     * @var ValidatorInterface
+     * @var ValidatorInterface|LegacyValidatorInterface $validator
      */
     protected $validator = null;
 
@@ -2545,8 +2546,13 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     /**
      * {@inheritdoc}
      */
-    public function setValidator(ValidatorInterface $validator)
+    public function setValidator($validator)
     {
+        // TODO: Remove it when bumping requirements to SF 2.5+
+        if (!$validator instanceof ValidatorInterface && !$validator instanceof LegacyValidatorInterface) {
+            throw new \InvalidArgumentException('Argument 1 must be an instance of Symfony\Component\Validator\Validator\ValidatorInterface or Symfony\Component\Validator\ValidatorInterface');
+        }
+
         $this->validator = $validator;
     }
 

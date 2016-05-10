@@ -22,9 +22,10 @@ use Sonata\AdminBundle\Security\Handler\SecurityHandlerInterface;
 use Sonata\AdminBundle\Translator\LabelTranslatorStrategyInterface;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\CoreBundle\Model\Metadata;
+use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\ValidatorInterface;
 
 interface AdminInterface
 {
@@ -403,12 +404,14 @@ interface AdminInterface
     public function id($entity);
 
     /**
-     * @param \Symfony\Component\Validator\ValidatorInterface $validator
+     * @param ValidatorInterface|LegacyValidatorInterface $validator
+     *
+     * @return void
      */
-    public function setValidator(ValidatorInterface $validator);
+    public function setValidator($validator);
 
     /**
-     * @return \Symfony\Component\Validator\ValidatorInterface
+     * @return ValidatorInterface|LegacyValidatorInterface
      */
     public function getValidator();
 
